@@ -1,12 +1,12 @@
 /*
  * @Date: 2022-07-29 15:27:05
  * @LastEditors: changgeee
- * @LastEditTime: 2022-07-31 15:10:33
- * @FilePath: /jetlinks-ui-antd/src/pages/wave/info/index.tsx
+ * @LastEditTime: 2022-08-09 20:02:24
+ * @FilePath: /jetlinks-copy/src/pages/wave/info/index.tsx
  */
 import React, { useEffect, useState } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Avatar, Badge, Button, Card, Spin, Radio, DatePicker } from 'antd';
+import { Avatar, Badge, Button, Card, Spin, Radio, DatePicker, Tag, message } from 'antd';
 import { router } from 'umi';
 import apis from '@/services';
 import styles from '../index.less';
@@ -14,6 +14,8 @@ import FeatureChart from './featureChart';
 import WaveChart from './waveChart';
 import * as _ from 'lodash';
 import moment from 'moment';
+
+const { CheckableTag } = Tag;
 interface Props {
   dispatch: Dispatch;
   deviceProduct: any;
@@ -60,7 +62,7 @@ const WaveInfo: React.FC<Props> = props => {
       })
       .then(res => {
         setWaveList(res);
-        setSelectedDatas(res);
+        setSelectedDatas(_.map(res.slice(0, 4), item => item.waveId));
       });
   };
   useEffect(() => {
@@ -78,7 +80,6 @@ const WaveInfo: React.FC<Props> = props => {
     });
     return res;
   };
-
   return (
     <PageHeaderWrapper title="波形分析">
       <div className={styles.card} style={{ minHeight: '70px' }}>
@@ -179,20 +180,38 @@ const WaveInfo: React.FC<Props> = props => {
       {type === 'wave' ? (
         <div className={styles.card}>
           {_.map(waveList, item => (
-            <div>
-              <span className={styles.textData} style={{ paddingRight: '10px' }}>
-                {item.pointCode.slice(0, 3)}
-              </span>
-              <span>{item.waveTime}</span>
-            </div>
+            <CheckableTag
+              key={item.waveTime}
+              checked={selectedDatas.includes(item.waveId)}
+              onChange={checked => {
+                console.log(checked, selectedDatas);
+                if (checked) {
+                  if (selectedDatas.length < 10) {
+                    setSelectedDatas([...selectedDatas, item.waveId]);
+                  } else {
+                    message.warning('同时展示的波形不能超过10个');
+                  }
+                } else {
+                  let res = [...selectedDatas];
+                  _.remove(res, i => i === item.waveId);
+                  setSelectedDatas(res);
+                }
+              }}
+            >
+              {item.pointCode.slice(0, 3)} {item.waveTime}
+            </CheckableTag>
           ))}
         </div>
       ) : null}
       {type === 'wave' ? (
         <div>
-          {selectedDatas.map(item => (
-            <WaveChart waveInfo={item} />
-          ))}
+          {waveList.map(item =>
+            selectedDatas.includes(item.waveId) ? (
+              <div key={item.waveId}>
+                <WaveChart waveInfo={item} key={item.waveId} />
+              </div>
+            ) : null,
+          )}
         </div>
       ) : null}
     </PageHeaderWrapper>

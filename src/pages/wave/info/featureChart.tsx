@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-07-29 17:35:21
  * @LastEditors: changgeee
- * @LastEditTime: 2022-07-31 14:56:47
- * @FilePath: /jetlinks-ui-antd/src/pages/wave/info/featureChart.tsx
+ * @LastEditTime: 2022-08-09 17:04:50
+ * @FilePath: \src\pages\wave\info\featureChart.tsx
  */
 import React, { useEffect, useState, useRef } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';

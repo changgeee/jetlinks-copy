@@ -1,8 +1,8 @@
 /*
  * @Date: 2022-07-29 13:52:47
  * @LastEditors: changgeee
- * @LastEditTime: 2022-07-31 10:54:40
- * @FilePath: /jetlinks-ui-antd/config/proxy.ts
+ * @LastEditTime: 2022-08-09 19:32:56
+ * @FilePath: /jetlinks-copy/config/proxy.ts
  */
 /**
  * 在生产环境 代理是无法生效的，所以这里没有生产环境的配置
@@ -28,7 +28,7 @@ export default {
       pathRewrite: { '^/jetlinks': '' },
     },
     "/api": {
-      target: 'http://192.168.1.5:8080/',
+      target: 'http://192.168.1.100:48080/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     }
